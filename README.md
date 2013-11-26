@@ -4,7 +4,7 @@ This website scraping tool is built to pull information about Trakehner horses
 out of websites and built it into a form we can consume to populate our own
 Trakehner data radiator site.
 
-www.theunofficialtrakehnerdatabase.com
+www.unofficialtrakehnerdatabase.com
 ======================================
 The data pulled by this tool is intended for use at our website, the
 Unofficial Trakehner Database (www.theunofficialtrakehnerdatabase.com).  The
