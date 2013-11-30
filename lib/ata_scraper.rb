@@ -37,8 +37,6 @@ class ATAScraper
       f.write JSON.generate(rows_as_horses(rows, limiter))
     end
 
-
-
     def URL_for_initial(initial)
       "http://americantrakehner.com/results/hsearch.asp?searchname=#{ initial }"
     end
@@ -46,23 +44,21 @@ class ATAScraper
     def results_as_rows(page, initial)
       rows = page.all(:xpath, '/html/body/table[2]/tbody/tr')
       puts "Got page from americantrakehner.com for inital #{ initial }, counted #{ rows.count } records"
-      # The first two lines of the table are headers, strip them out
-      rows.drop(2)
+      # The first two lines of the table are table headers, strip them out
+      rows = rows.drop(2)
+      # The last line is a table footer, strip it, too
+      rows.take( rows.count - 1 )
     end
 
     def rows_as_horses(rows, limit)
       horses = Array.new
-      row_count = 0
-      rows.each do |row|
-        horses << row_as_horse(row)
-        row_count += 1
+      puts "Start of rows_as_horses, #{ rows.size } rows to parse"
+      rows.each_with_index do |row, index|
 
-        if row_count % 512 == 0
-          puts("#{ row_count } rows parsed")
-        end
+        horses << row_as_horse(row)]
 
         if limit != 0
-          row_count >= limit ? break : nil
+          index >= limit ? break : nil
         end
 
       end
