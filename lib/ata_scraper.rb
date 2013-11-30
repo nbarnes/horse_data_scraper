@@ -3,6 +3,7 @@
 
 require 'capybara-webkit'
 require_relative './horse.rb'
+require 'json'
 require 'pry'
 
 DATA_COLUMNS_IN_HORSE_ROW = [
@@ -23,23 +24,20 @@ class ATAScraper
   include Capybara::DSL
   Capybara.current_driver = :webkit
 
-    def json_for_initial(initial)
+
+    def json_for_initial(initial, limiter=0)
       visit URL_for_initial(initial)
       rows = results_as_rows(page, initial)
 
-      f = File.open("horses_initial_#{ initial }.json", 'wb')
-      row_count = 0
+      f = File.open("output/horses_initial_#{ initial }.json", 'wb')
       puts "#{ rows.count } total rows to process"
-      rows.each do |row|
-        f.write row_as_horse(row).to_json
 
-        row_count += 1
-        if row_count % 500 == 0
-          puts("#{ row_count } rows parsed")
-        end
+      puts "Limiter is set to #{ limiter }"
 
-      end
+      f.write JSON.generate(rows_as_horses(rows, limiter))
     end
+
+
 
     def URL_for_initial(initial)
       "http://americantrakehner.com/results/hsearch.asp?searchname=#{ initial }"
@@ -50,6 +48,25 @@ class ATAScraper
       puts "Got page from americantrakehner.com for inital #{ initial }, counted #{ rows.count } records"
       # The first two lines of the table are headers, strip them out
       rows.drop(2)
+    end
+
+    def rows_as_horses(rows, limit)
+      horses = Array.new
+      row_count = 0
+      rows.each do |row|
+        horses << row_as_horse(row)
+        row_count += 1
+
+        if row_count % 512 == 0
+          puts("#{ row_count } rows parsed")
+        end
+
+        if limit != 0
+          row_count >= limit ? break : nil
+        end
+
+      end
+      return horses
     end
 
     def row_as_horse(row)

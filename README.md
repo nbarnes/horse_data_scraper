@@ -22,4 +22,3 @@ About Me
 ========
 My name is Nathaniel Barnes.  I can be reached at nbarnes@gmail.com or at my
 LinkedIn at http://www.linkedin.com/in/nbarnes2
-

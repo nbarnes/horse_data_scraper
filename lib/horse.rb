@@ -7,12 +7,17 @@ class Horse
   def initialize
   end
 
-  def to_json
+  def to_hash
     hash = {}
     instance_variables.each do |var|
       hash[var.to_s.delete("@")] = instance_variable_get(var)
     end
-    return hash.to_json
+    return hash
+  end
+
+
+  def to_json(options=nil)
+    return JSON.generate(to_hash)
   end
 
 end

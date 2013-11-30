@@ -37,6 +37,7 @@ PLATFORMS
 
 DEPENDENCIES
   capybara-webkit
+  json
   minitest
   pry
   turn
